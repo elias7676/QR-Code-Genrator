@@ -1,0 +1,177 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts\ajax-common.js"></script>
+    <script src="scripts\product.js"></script>
+    <head>
+    <title>QR Code Generator</title>
+
+    <link rel="stylesheet" type="text/css" href="styles\site.css">
+  </head>
+      <h1>QR Code Generator</h1>
+
+     
+
+      <div style="float:right; width:50%;">
+  <!-- content for the second section -->
+  <img id="image" name="image" src="">
+</div>
+<div id="navbar">
+  <button class="tab" id="form1", onclick="clearInput();">Location</button>
+  <button class="tab" id="form2", onclick="clearInput();">VCard</button>
+  <button class="tab" id="form3", onclick="clearInput();">SMS</button>
+  <button class="tab" id="form4", onclick="clearInput();">Event</button>
+  <button class="tab" id="form5", onclick="clearInput();">WIFI</button>
+  <button class="tab" id="form6", onclick="clearInput();">URL</button>
+  <button class="tab" id="form7", onclick="clearInput();">LinkedIn</button>
+  <button class="tab" id="form8", onclick="clearInput();">Marketplace</button>
+  <button class="tab" id="form9", onclick="clearInput();">Telegram</button>
+  <button class="tab" id="form10", onclick="clearInput();">TikTok</button>
+</div>
+
+<div id="content">
+  <div class="form" id="form1-content">
+         <h2>Location</h2>
+         <form>
+        <label for="latitude">Latitude</label>
+        <input id="latitude" name="latitude" type="text" value="0" /></br>
+                <label for="longitude">Longitude</label>
+        <input id="longitude" name="longitude" type="text" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form2-content", style="display:none;">
+         <h2>Vcard</h2>
+         <form>
+                    <label for="firstName">First Name</label>
+        <input id="firstName" name="firstName" type="text" value="0" />
+                <label for="lastName">Last Name</label>
+        <input id="lastName" name="lastName" type="text" value="0" />
+                <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="text" value="0" />
+                <label for="email">Email</label>
+        <input id="email" name="email" type="text" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form3-content", style="display:none;">
+         <h2>SMS</h2>
+         <form>
+                    <label for="phone_number">Phone</label>
+        <input id="phone_number" name="phone_number" type="text" value="0" />
+                <label for="message">Draft</label>
+        <input id="message" name="message" type="text" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form4-content", style="display:none;">
+         <h2>Event</h2>
+         <form>
+                    <label for="summary">Summary</label>
+        <input id="summary" name="summary" type="text" value="0" />
+
+                <label for="description">Description</label>
+        <input id="description" name="description" type="text" value="0" />
+
+                        <label for="location">Location</label>
+        <input id="location" name="location" type="text" value="0" />
+
+                        <label for="start">Start Time</label>
+        <input id="start" name="start" type="datetime-local"  value="0" />
+
+                        <label for="end">End Time</label>
+        <input id="end" name="end" type="datetime-local" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form5-content",  style="display:none;">
+         <h2>WIFI Access</h2>
+         <form>
+                    <label for="ssid">SSID</label>
+        <input id="ssid" name="ssid" type="text" value="0" />
+                <label for="password">Password</label>
+        <input id="password" name="password" type="text" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form6-content",  style="display:none;">
+         <h2>URL</h2>
+         <form>
+                    <label for="url">URL</label>
+        <input id="url" name="url" type="text" value="0" />
+            
+         </form>
+  </div>
+    <div class="form" id="form7-content",  style="display:none;">
+      <h2>LinkedIn Profile</h2>
+    <form>
+      <label for="linkedin">Linked In ID:</label>
+      <input type="text" id="linkedin" name="linkedin" value="0">
+      <br>
+    </form>
+  </div>
+    <div class="form" id="form8-content",  style="display:none;">
+      <h2>Facebook Marketplace</h2>
+    <form>
+      <label for="marketplace">Item ID:</label>
+      <input type="text" id="marketplace" name="marketplace" value="0">
+      <br>
+    </form>
+  </div>
+    <div class="form" id="form9-content",  style="display:none;">
+      <h2>Telegram</h2>
+    <form>
+      <label for="telegram">User ID:</label>
+      <input type="text" id="telegram" name="telegram" value="0">
+      <br>
+    </form>
+  </div>
+  <div class="form" id="form10-content", style="display:none">
+    <h2>TikTok Video</h2>
+    <form>
+      <label for="tiktok">Video ID:</label>
+      <input type="text" id="tiktok" name="tiktok" value="0">
+      <br>
+    </form>
+  </div>
+           <button type="button" onclick="generate();">
+          Generate
+        </button>
+
+
+<script>
+    'use strict';
+
+      const URL = "http://localhost:5000/sms";
+          function generate() {
+        let product = getFromInput();
+        let settings = {
+          url: URL,
+          contentType: "application/json",
+          data: JSON.stringify(product)
+        }
+
+        $.post(settings)
+          .done(function (data) {
+            displayMessage("Product Inserted");
+            console.log(data);
+            $('#image').attr('src', 'codes/sms.png?' + new Date().getTime());
+            //setInput();
+          })
+          .fail(function (error) {
+            //handleAjaxError(error);
+          })
+          .always(function () {
+            console.log("In the always() method");
+             
+          });
+      }
+</script>
+</div>
+<script>
+  $(document).ready(function() {
+  $('.tab').click(function() {
+    $('.form').hide();
+    $('#' + $(this).attr('id') + '-content').show();
+  });
+});
+
+</script>
